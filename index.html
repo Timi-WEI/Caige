@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>焦作市斑马应急救援队签到系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #f4f4f9; /* Default background color */
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        input[type="text"], input[type="password"], select, input[type="date"] {
+            padding: 12px;
+            font-size: 16px;
+            width: calc(100% - 24px);
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus, input[type="password"]:focus, select:focus, input[type="date"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+        li {
+            background-color: #e9ecef;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .login-section {
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .login-form {
+            text-align: left;
+            margin-top: 15px;
+        }
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            margin-bottom: 10px;
+            width: calc(100% - 24px);
+        }
+        .login-form button {
+            width: 100%;
+            background-color: #28a745;
+        }
+        .login-form button:hover {
+            background-color: #218838;
+        }
+        .checkin-section {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .checkin-section input[type="text"],
+        .checkin-section select,
+        .checkin-section button {
+            margin-bottom: 10px;
+        }
+        .checkin-section button {
+            width: 100%;
+        }
+        .edit-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .edit-buttons button {
+            width: auto;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        .query-section {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .query-section input[type="date"],
+        .query-section select,
+        .query-section button {
+            margin-bottom: 10px;
+        }
+        .query-results {
+            margin-top: 20px;
+            text-align: left;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            h1, h2 {
+                font-size: 22px;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            .edit-buttons button {
+                padding: 5px 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <h1>焦作市斑马应急救援队签到系统</h1>
+        
+        <!-- Login Section -->
+        <div class="login-section">
+            <button id="toggleLoginButton">管理员登录</button>
+            <div id="loginForm" class="hidden login-form">
+                <input type="text" id="adminUsername" placeholder="用户名">
+                <input type="password" id="adminPassword" placeholder="密码">
+                <button id="loginButton">登录</button>
+            </div>
+        </div>
+
+        <!-- Admin Settings Section -->
+        <div id="adminSettings" class="hidden admin-settings">
+            <h2>管理员设置</h2>
+            <button id="logoutButton">退出登录</button>
+        </div>
+
+        <!-- Query Section -->
+        <div id="querySection" class="hidden query-section">
+            <h2>查询签到记录</h2>
+            <label for="queryDate">选择日期:</label>
+            <input type="date" id="queryDate">
+            <label for="queryTeam">选择队伍:</label>
+            <select id="queryTeam">
+                <option value="">请选择队伍</option>
+                <option value="博爱队">博爱队</option>
+                <option value="孟州队">孟州队</option>
+                <option value="市区队">市区队</option>
+                <option value="武陟队">武陟队</option>
+                <option value="沁阳队">沁阳队</option>
+                <option value="修武队">修武队</option>
+            </select>
+            <button id="queryButton">查询签到名单</button>
+            <button id="countButton">查询签到人数</button>
+            <button id="exportImageButton" style="margin-top: 10px;" class="hidden">导出为图片</button>
+            <div id="queryResults" class="query-results hidden"></div>
+        </div>
+
+        <!-- Check-in Section -->
+        <div class="checkin-section">
+            <input type="text" id="nameInput" placeholder="请输入姓名" pattern="^[\u4e00-\u9fa5]{2,4}$" title="请输入2到4个中文汉字">
+            <select id="teamSelect">
+                <option value="">请选择队伍</option>
+                <option value="博爱队">博爱队</option>
+                <option value="孟州队">孟州队</option>
+                <option value="市区队">市区队</option>
+                <option value="武陟队">武陟队</option>
+                <option value="沁阳队">沁阳队</option>
+                <option value="修武队">修武队</option>
+            </select>
+            <button id="checkinButton">签到</button>
+            <ul id="checkinList" class="hidden"></ul>
+            <button id="downloadButton" style="margin-top: 15px;" class="hidden">下载签到数据</button>
+        </div>
+    </div>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        const toggleLoginButton = document.getElementById('toggleLoginButton');
+        const loginForm = document.getElementById('loginForm');
+        const adminUsername = document.getElementById('adminUsername');
+        const adminPassword = document.getElementById('adminPassword');
+        const loginButton = document.getElementById('loginButton');
+
+        const logoutButton = document.getElementById('logoutButton');
+
+        const adminSettings = document.getElementById('adminSettings');
+
+        const checkinButton = document.getElementById('checkinButton');
+        const downloadButton = document.getElementById('downloadButton');
+        const checkinList = document.getElementById('checkinList');
+        const nameInput = document.getElementById('nameInput');
+        const teamSelect = document.getElementById('teamSelect');
+
+        const querySection = document.getElementById('querySection');
+        const queryDate = document.getElementById('queryDate');
+        const queryTeam = document.getElementById('queryTeam');
+        const queryButton = document.getElementById('queryButton');
+        const countButton = document.getElementById('countButton');
+        const exportImageButton = document.getElementById('exportImageButton');
+        const queryResults = document.getElementById('queryResults');
+
+        let signIns = [];
+        const validAdmin = { username: 'admin', password: 'admin' };
+        let isAdminLoggedIn = false;
+
+        toggleLoginButton.addEventListener('click', () => {
+            if (loginForm.classList.contains('hidden')) {
+                loginForm.classList.remove('hidden');
+                toggleLoginButton.textContent = '关闭登录';
+            } else {
+                loginForm.classList.add('hidden');
+                toggleLoginButton.textContent = '管理员登录';
+            }
+        });
+
+        loginButton.addEventListener('click', () => {
+            const username = adminUsername.value.trim();
+            const password = adminPassword.value.trim();
+
+            if (username === validAdmin.username && password === validAdmin.password) {
+                alert('登录成功！');
+                // Show check-in list and download button
+                checkinList.classList.remove('hidden');
+                downloadButton.classList.remove('hidden');
+                // Show admin settings
+                adminSettings.classList.remove('hidden');
+                // Show query section
+                querySection.classList.remove('hidden');
+                // Hide login form
+                loginForm.classList.add('hidden');
+                toggleLoginButton.textContent = '管理员登录';
+                // Load existing sign-ins
+                loadSignIns();
+                isAdminLoggedIn = true;
+            } else {
+                alert('用户名或密码错误');
+            }
+        });
+
+        logoutButton.addEventListener('click', () => {
+            // Hide admin settings
+            adminSettings.classList.add('hidden');
+            // Hide check-in list and download button
+            checkinList.classList.add('hidden');
+            downloadButton.classList.add('hidden');
+            // Hide query section
+            querySection.classList.add('hidden');
+            // Reset login form fields
+            adminUsername.value = '';
+            adminPassword.value = '';
+            // Hide login form
+            loginForm.classList.add('hidden');
+            toggleLoginButton.textContent = '管理员登录';
+            isAdminLoggedIn = false;
+        });
+
+        checkinButton.addEventListener('click', () => {
+            const now = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Shanghai"}));
+            const dayOfWeek = now.getDay(); // 0 (Sunday) to 6 (Saturday)
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+
+            // Check if it's Monday between 19:30 and 20:30 unless admin is logged in
+            const isWithinTimeFrame = isAdminLoggedIn || ((dayOfWeek === 1) && (hours > 19 || (hours === 19 && minutes >= 30)) && (hours < 20 || (hours === 20 && minutes <= 30)));
+
+            if (!isWithinTimeFrame) {
+                alert('焦作市斑马应急救援队温馨提示：签到失败！请在每周一19:30-20:30的时间段内完成签到！');
+                return;
+            }
+
+            const name = nameInput.value.trim();
+            const selectedTeam = teamSelect.value;
+
+            // Validate name input
+            const namePattern = /^[\u4e00-\u9fa5]{2,4}$/;
+            if (!namePattern.test(name)) {
+                alert('请输入2到4个中文汉字作为姓名');
+                return;
+            }
+
+            if (!selectedTeam) {
+                alert('请选择一个队伍');
+                return;
+            }
+
+            const formattedTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+            signIns.push({ name, time: formattedTime, team: selectedTeam });
+
+            renderCheckInList();
+            // Clear the input field after signing in
+            nameInput.value = '';
+            teamSelect.value = '';
+
+            // Alert user that they have signed in successfully
+            alert(`焦作市斑马应急救援队温馨提示：${name}同志在${selectedTeam}签到成功！\n签到日期和时间：${formattedTime}`);
+        });
+
+        downloadButton.addEventListener('click', () => {
+            if (signIns.length === 0) {
+                alert('没有签到记录可供下载');
+                return;
+            }
+
+            // Sort sign-ins by date and time
+            signIns.sort((a, b) => new Date(a.time) - new Date(b.time));
+
+            const csvContent = "data:text/csv;charset=utf-8," 
+                             + "签到日期,签到时间,姓名,队伍\n"
+                             + signIns.map(signIn => {
+                                 const [date, time] = signIn.time.split(' ');
+                                 return `${date},${time},${signIn.name},${signIn.team}`;
+                             }).join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "签到记录.csv");
+            document.body.appendChild(link); // Required for FF
+
+            link.click(); // This will download the data file named "签到记录.csv".
+            document.body.removeChild(link);
+        });
+
+        function renderCheckInList() {
+            checkinList.innerHTML = '';
+            signIns.forEach((signIn, index) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span>${signIn.name} - ${signIn.time} - ${signIn.team}</span>
+                    <div class="edit-buttons">
+                        <button onclick="editSignIn(${index})">编辑</button>
+                        <button onclick="deleteSignIn(${index})">删除</button>
+                    </div>
+                `;
+                checkinList.appendChild(listItem);
+            });
+            localStorage.setItem('signIns', JSON.stringify(signIns));
+        }
+
+        function editSignIn(index) {
+            const signIn = signIns[index];
+            const newName = prompt('请输入新的姓名:', signIn.name);
+            const newTeam = prompt('请输入新的队伍:', signIn.team);
+
+            // Validate new name input
+            const namePattern = /^[\u4e00-\u9fa5]{2,4}$/;
+            if (!namePattern.test(newName)) {
+                alert('请输入2到4个中文汉字作为姓名');
+                return;
+            }
+
+            if (newName && newTeam) {
+                signIns[index] = { ...signIn, name: newName, team: newTeam };
+                renderCheckInList();
+                alert('签到信息已更新');
+            } else {
+                alert('更新失败，请输入有效的信息');
+            }
+        }
+
+        function deleteSignIn(index) {
+            if (confirm('确定要删除这条签到信息吗？')) {
+                signIns.splice(index, 1);
+                renderCheckInList();
+                alert('签到信息已删除');
+            }
+        }
+
+        function loadSignIns() {
+            // Load from local storage
+            const savedSignIns = JSON.parse(localStorage.getItem('signIns'));
+            if (savedSignIns) {
+                signIns = savedSignIns;
+                renderCheckInList();
+            }
+        }
+
+        queryButton.addEventListener('click', () => {
+            const selectedDate = queryDate.value;
+            const selectedTeam = queryTeam.value;
+
+            if (!selectedDate) {
+                alert('请选择一个日期');
+                return;
+            }
+
+            if (!selectedTeam) {
+                alert('请选择一个队伍');
+                return;
+            }
+
+            const filteredSignIns = signIns.filter(signIn => signIn.time.startsWith(selectedDate) && signIn.team === selectedTeam);
+
+            if (filteredSignIns.length === 0) {
+                queryResults.innerHTML = '<p>没有找到符合条件的签到记录</p>';
+                queryResults.classList.remove('hidden');
+                exportImageButton.classList.add('hidden');
+                return;
+            }
+
+            let resultsHtml = `<h3>查询结果 - ${selectedDate} - ${selectedTeam}</h3><ul>`;
+            filteredSignIns.forEach(signIn => {
+                resultsHtml += `<li>${signIn.name} - ${signIn.time}</li>`;
+            });
+            resultsHtml += '</ul>';
+
+            queryResults.innerHTML = resultsHtml;
+            queryResults.classList.remove('hidden');
+            exportImageButton.classList.remove('hidden');
+        });
+
+        countButton.addEventListener('click', () => {
+            const selectedDate = queryDate.value;
+            const selectedTeam = queryTeam.value;
+
+            if (!selectedDate) {
+                alert('请选择一个日期');
+                return;
+            }
+
+            if (!selectedTeam) {
+                alert('请选择一个队伍');
+                return;
+            }
+
+            const filteredSignIns = signIns.filter(signIn => signIn.time.startsWith(selectedDate) && signIn.team === selectedTeam);
+
+            const count = filteredSignIns.length;
+
+            let resultsHtml = `<h3>查询结果 - ${selectedDate} - ${selectedTeam}</h3>`;
+            resultsHtml += `<p>签到人数: ${count}人</p>`;
+
+            queryResults.innerHTML = resultsHtml;
+            queryResults.classList.remove('hidden');
+            exportImageButton.classList.remove('hidden');
+        });
+
+        exportImageButton.addEventListener('click', () => {
+            html2canvas(queryResults).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = imgData;
+                link.download = '签到记录.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+
+        window.editSignIn = editSignIn;
+        window.deleteSignIn = deleteSignIn;
+    </script>
+</body>
+</html>
+
+
