@@ -176,6 +176,30 @@
         .red-text {
             color: red;
         }
+
+        .feedback-container {
+            margin-top: 20px;
+        }
+
+        .feedback-button {
+            margin-top: 20px; /* 调整按钮和文字间距 */
+        }
+
+        .news-rule {
+            margin-top: 20px;
+        }
+
+        .news-button {
+            margin-top: 20px; /* 调整按钮和文字间距 */
+        }
+
+        .slacking-rule {
+            margin-top: 20px;
+        }
+
+        .slacking-button {
+            margin-top: 20px; /* 调整按钮和文字间距 */
+        }
     </style>
 </head>
 <body>
@@ -208,6 +232,21 @@
             <button class="icon-button" onclick="navigateTo('job-information')">
                 <img src="https://pic.greenxf.com/phoneico/2016-12/201612221122532657.png" alt="招聘信息" class="icon-image">
                 <span class="icon-text">招聘信息</span>
+            </button>
+            <!-- 第三行 -->
+            <button class="icon-button" onclick="navigateTo('feature-feedback')">
+                <img src="https://bpic.51yuansu.com/pic3/cover/02/24/67/59bf21db5f925_610.jpg" alt="功能反馈" class="icon-image">
+                <span class="icon-text">功能反馈</span>
+            </button>
+            <!-- 第四行 -->
+            <button class="icon-button" onclick="navigateTo('today-news')">
+                <img src="https://static.loupan.com/newsimg/media/2022/0109/1522538240253.png" alt="今日资讯" class="icon-image">
+                <span class="icon-text">今日资讯</span>
+            </button>
+            <!-- 第五行 -->
+            <button class="icon-button" onclick="navigateTo('slacking-chat')">
+                <img src="https://apic.tvzhe.com/images/a0/ec/ffd50ced3941ac6af96f0a2b83f93f84937ceca0.png" alt="摸鱼闲聊" class="icon-image">
+                <span class="icon-text">摸鱼闲聊</span>
             </button>
         </div>
     </div>
@@ -299,10 +338,10 @@
         <h1>联系才哥</h1>
         <div class="contact-info">
             <img src="https://img.md2card.com/img/2025-06-13/1749852959575-clipboard-image.png" alt="才哥头像" class="contact-avatar">
-            <p>才哥的微信号：<strong id="wechat-id" class="copyable">_MyTimin</strong></p>
-            <p class="red-text">长按微信号，复制微信号</p>
+            <p>才哥的微信号：<strong id="wechat-id" class="red-text""copyable">_MyTimin</strong></p>
+            <p class="red-text">点击红色微信号，复制微信号</p>
             <img src="https://img.md2card.com/img/2025-06-13/1749852971430-clipboard-image.jpg" alt="才哥二维码" class="contact-qrcode" id="qrcode">
-            <p class="red-text">长按识别保存图片，打开微信扫一扫</p>
+            <p class="red-text">长按识别二维码，添加微信好友</p>
         </div>
     </div>
 
@@ -310,7 +349,36 @@
         <button class="back-button" onclick="navigateBack()">返回</button>
         <h1>招聘信息</h1>
         <div class="form-container">
-            <button class="calculate-button" onclick="window.location.href='https://kdocs.cn/l/ckU9gEiejKwO'">我要找工作的</button>
+            <button class="calculate-button" onclick="window.location.href='https://kdocs.cn/l/ckU9gEiejKwO'">我要找工作</button>
+        </div>
+    </div>
+
+    <div id="feature-feedback" class="container hidden">
+        <button class="back-button" onclick="navigateBack()">返回</button>
+        <h1>功能反馈</h1>
+        <div class="feedback-container">
+            <p>欢迎大家多多提出宝贵建议，我们每天都会看，如果能快速实现的，我们都会一一实现</p>
+            <button class="calculate-button feedback-button" onclick="window.location.href='https://kdocs.cn/l/ci5cxdEnaElO'">我要反馈</button>
+        </div>
+    </div>
+
+    <div id="today-news" class="container hidden">
+        <button class="back-button" onclick="navigateBack()">返回</button>
+        <h1>今日资讯</h1>
+        <div class="news-container">
+            <p class="red-text news-rule">规则</p>
+            <p>这个板块，每天都会清除所有内容，如果第二天还需要继续发布，请再次发布即可。</p>
+            <button class="calculate-button news-button" onclick="window.location.href='https://kdocs.cn/l/ckl3oUA2MuPZ'">查看/发布 资讯</button>
+        </div>
+    </div>
+
+    <div id="slacking-chat" class="container hidden">
+        <button class="back-button" onclick="navigateBack()">返回</button>
+        <h1>摸鱼闲聊</h1>
+        <div class="slacking-container">
+            <p class="red-text slacking-rule">规则</p>
+            <p>这个板块，每天不定时随机清除所有内容。</p>
+            <button class="calculate-button slacking-button" onclick="window.location.href='https://kdocs.cn/l/caTTA86i5tf4'">开始摸鱼</button>
         </div>
     </div>
 
@@ -324,6 +392,9 @@
             document.getElementById('brand-directory').classList.add('hidden');
             document.getElementById('contact-caige').classList.add('hidden');
             document.getElementById('job-information').classList.add('hidden');
+            document.getElementById('feature-feedback').classList.add('hidden');
+            document.getElementById('today-news').classList.add('hidden');
+            document.getElementById('slacking-chat').classList.add('hidden');
             document.getElementById(pageId).classList.remove('hidden');
         }
 
@@ -335,6 +406,9 @@
             document.getElementById('brand-directory').classList.add('hidden');
             document.getElementById('contact-caige').classList.add('hidden');
             document.getElementById('job-information').classList.add('hidden');
+            document.getElementById('feature-feedback').classList.add('hidden');
+            document.getElementById('today-news').classList.add('hidden');
+            document.getElementById('slacking-chat').classList.add('hidden');
             document.getElementById('home-page').classList.remove('hidden');
         }
 
@@ -381,11 +455,10 @@
                 const commissionAmount = retailPrice * (commissionRate / 100);
                 const netProfit = grossProfitSpace - commissionAmount;
 
-                if (netProfit >= -10) {
-                    resultHtml += `<p>佣金率${commissionRate}%, 佣金金额: ${commissionAmount.toFixed(2)}, 剩余纯利: ${netProfit.toFixed(2)}</p>`;
-                } else {
-                    break;
-                }
+                const rowColor = netProfit >= 0 ? 'green' : 'red';
+                resultHtml += `<p style="color: ${rowColor}; display: inline-block; margin-right: 10px;">
+                    佣金率${commissionRate}%, 佣金金额: ${commissionAmount.toFixed(2)}, 剩余纯利: ${netProfit.toFixed(2)}
+                </p>`;
             }
 
             document.getElementById('commission-result').innerHTML = resultHtml;
